@@ -1,0 +1,21 @@
+{
+  "name": "web-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jest": "^23.6.0",
+    "joi": "^14.3.0",
+    "multer": "^1.4.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
+  }
+}
