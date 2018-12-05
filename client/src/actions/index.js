@@ -5,10 +5,12 @@ export let loginUser = loginData => async dispatch => {
     dispatch({
       type: 'LOGIN_START',
     })
-    let response = await axios.post('http://localhost:8080/login', loginData)
+    let {data} = await axios.post('http://localhost:8080/login', loginData)
+    window.localStorage.setItem('CodeScannerToken', data.token)
+    axios.defaults.headers.post['CodeScannerToken'] = data.token;
     dispatch({
       type: 'LOGIN_SUCCESS',
-      payload: response
+      payload: data
     })
   } catch (err) {
     dispatch({
@@ -23,7 +25,7 @@ export let registerUser = registerData => async dispatch => {
     dispatch({
       type: 'REGISTER_START',
     })
-    let response = await axios.post('/register', registerData)
+    let response = await axios.post('http://localhost:8080/register', registerData)
     dispatch({
       type: 'REGISTER_SUCCESS',
       payload: response
@@ -41,7 +43,7 @@ export let logoutUser = () => async dispatch => {
     dispatch({
       type: 'LOGOUT_START',
     })
-    let response = await axios.post('/logout')
+    let response = await axios.post('http://localhost:8080/logout')
     dispatch({
       type: 'LOGOUT_SUCCESS',
       payload: response
@@ -59,7 +61,7 @@ export let getSubmissions = data => async dispatch => {
     dispatch({
       type: 'GETSUBMISSIONS_START',
     })
-    let response = await axios.get('/submissions', data)
+    let response = await axios.get('http://localhost:8080/submissions', data)
     dispatch({
       type: 'GETSUBMISSIONS_SUCCESS',
       payload: response

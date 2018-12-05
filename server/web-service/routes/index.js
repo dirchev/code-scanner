@@ -2,23 +2,26 @@ const errorsResponder = require('./errorResponder')
 const defaultResponder = require('./defaultResponder')
 const loadRouteConstructor = require('./loadRouteConstructor')
 const FileService = require('../lib/file-service')
-const cors = require('cors')
-
-var corsOptions = {
-  origin: 'http://localhost:3000',
-}
 
 let routes = function ({app, models = {}}) {
   let apiHelpers = {
-    fileService: new FileService({url: 'http://localhost:8081'}),
-    cors: cors(corsOptions)
+    createError: function (errors, code) {
+      let error = new Error('CustomError')
+      error.isCodeScannerError = true
+      error.code = code
+      error.errors = errors
+      return error
+    },
+    fileService: new FileService({url: 'http://localhost:8081'})
   }
-  app.use(apiHelpers.cors)
-  let loadRoute = loadRouteConstructor(app, {models, apiHelpers})
 
-  // loadRoute('get', '/',  require('./api/base'))
+  let loadRoute = loadRouteConstructor(app, {models, apiHelpers})
   loadRoute('post', '/login', require('./api/login'))
-  loadRoute('post', '/upload', require('./api/upload'))
+  loadRoute('post', '/register', require('./api/register'))
+  loadRoute('get', '/submissions', require('./api/submissions'))
+  loadRoute('get', '/submissions/:submissionId', require('./api/submission'))
+  loadRoute('post', '/submissions', require('./api/create-submission'))
+
 
   app.use(defaultResponder)
   app.use(errorsResponder)

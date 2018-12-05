@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+
 import NavigationApp from "../../ui/NavigationApp";
 import { Container, Card, CardHeader } from "bloomer";
 import { CardContent } from "bloomer/lib/components/Card/CardContent";
@@ -28,5 +29,4 @@ class Home extends Component {
     )
   }
 }
-
 export default Home;

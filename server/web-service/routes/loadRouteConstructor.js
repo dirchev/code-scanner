@@ -5,17 +5,17 @@ module.exports = function (app, context) {
     let routes = routeConstructor(context)
     if (!(routes instanceof Array)) {
       routes = [routes]
-    } else {
-      routes = routes.map(function (route) {
-        if (route instanceof AsyncFunction) {
-          return (req, res, next) => {
-            route(req, res).then(next).catch(next)
-          }
-        } else {
-          return route
-        }
-      })
-      app[method](...[path, ...routes])
     }
+
+    routes = routes.map(function (route) {
+      if (route instanceof AsyncFunction) {
+        return (req, res, next) => {
+          route(req, res).then(next).catch(next)
+        }
+      } else {
+        return route
+      }
+    })
+    app[method](path, ...routes)
   }
 }

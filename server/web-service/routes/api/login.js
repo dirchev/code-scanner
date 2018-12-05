@@ -6,13 +6,24 @@ module.exports = function ({models, apiHelpers}) {
     password: Joi.string().required()
   })
   return [
-    apiHelpers.cors,
     async (req, res) => {
       let data = await Joi.validate({
         email: req.body.email,
         password: req.body.password,
       }, schema)
-      res.body = data
+      let user = await models.User.findByCredentials(data)
+      if (!user) {
+        let error = apiHelpers.createError([{base: 'email and password are not valid'}], 403)
+        throw error
+      }
+      let token = await user.generateToken({
+        ip: req.ip,
+        user_agent: req.headers['user-agent'],
+      })
+      res.body = {
+        ...user.toJSON(),
+        token: token
+      }
     }
   ]
 }

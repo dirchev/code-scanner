@@ -2,12 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import 'bulma/css/bulma.css';
-import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from './serviceWorker'
 
-import { Provider } from "react-redux"
-import store from "./store"
+import { Provider } from 'react-redux'
+import store from './store'
+import axios from 'axios'
 
-const rootElement = document.getElementById("root");
+let token = window.localStorage.getItem('CodeScannerToken')
+if (token) {
+  axios.defaults.headers.common['CodeScannerToken'] = token
+  console.log('setting token')
+}
+
+const rootElement = document.getElementById("root")
 ReactDOM.render(
   <Provider store={store}>
     <App />
