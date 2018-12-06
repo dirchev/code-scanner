@@ -1,4 +1,3 @@
-const fs = require('fs')
 const request = require('request')
 
 let makeRequest = function (method, uri, formData) {
@@ -16,9 +15,8 @@ class FileService {
   }
 
   async writeFile (fileStream) {
-    let readStream = fileStream
     let formData = {
-      code_file: readStream.stream
+      code_file: fileStream
     }
     console.log('making request to file service');
 

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {} from "bloomer";
+import { submitCode } from '../../actions';
 import { Card } from "bloomer/lib/components/Card/Card";
 import { CardHeaderTitle } from "bloomer/lib/components/Card/Header/CardHeaderTitle";
-import { Title } from "bloomer/lib/elements/Title";
+import { Tab } from "bloomer/lib/components/Tabs/Tab";
+import { TabLink } from "bloomer/lib/components/Tabs/TabLink";
+import { Tabs } from "bloomer/lib/components/Tabs/Tabs";
+import { TabList } from "bloomer/lib/components/Tabs/TabList";
 import { CardContent } from "bloomer/lib/components/Card/CardContent";
 import { CardHeader } from "bloomer/lib/components/Card/Header/CardHeader";
-import { Columns } from "bloomer/lib/grid/Columns";
-import { Column } from "bloomer/lib/grid/Column";
 import { TextArea } from "bloomer/lib/elements/Form/TextArea";
 import { Field } from "bloomer/lib/elements/Form/Field/Field";
 import { Control } from "bloomer/lib/elements/Form/Control";
@@ -19,14 +20,28 @@ class CodeUpload extends Component {
   constructor() {
     super();
     this.state = {
+      tabSelected: 'CodeSnippet',
       formData: {
         title: "",
         codeSnippet: "",
-        codeFile: null
+        codeFile: {
+          file: "",
+          fileName: ""
+        }
       }
     };
     this.changeFormDataValue = this.changeFormDataValue.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.onFileChange = this.onFileChange.bind(this);
+    this.selectTab = this.selectTab.bind(this);
+  }
+
+  selectTab (tabSelected) {
+    return () => {
+      this.setState({
+        tabSelected: tabSelected
+      })
+    }
   }
 
   changeFormDataValue(field) {
@@ -45,7 +60,33 @@ class CodeUpload extends Component {
 
   handleFormSubmit(e) {
     e.preventDefault();
-    console.log(this.state)
+    let formData = {
+      title: this.state.formData.title
+    }
+    if (this.state.tabSelected === 'CodeSnippet') {
+      formData.codeSnippet = this.state.formData.codeSnippet
+    } else {
+      formData.codeFile = this.state.formData.codeFile.file
+    }
+    console.log(formData)
+    this.props.submitCode(formData)
+  }
+
+  onFileChange(e) {
+    let file = e.target.files[0];
+    let fileName = e.target.value.split(/(\\|\/)/g).pop();
+    this.setState(state => {
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          codeFile: {
+            file: file,
+            fileName: fileName
+          }
+        }
+      };
+    });
   }
 
   render() {
@@ -55,7 +96,7 @@ class CodeUpload extends Component {
           <CardHeaderTitle>Analyse code</CardHeaderTitle>
         </CardHeader>
         <CardContent>
-          <form action="">
+          <form onSubmit={this.handleFormSubmit}>
             <Field>
               <Label>Title</Label>
               <Control>
@@ -68,46 +109,58 @@ class CodeUpload extends Component {
               </Control>
             </Field>
 
-            <Columns>
-              <Column>
+            <Tabs>
+              <TabList>
+                <Tab isActive={this.state.tabSelected === 'CodeSnippet'}>
+                  <TabLink onClick={this.selectTab('CodeSnippet')}>
+                    <span>Code Snippet</span>
+                  </TabLink>
+                </Tab>
+                <Tab isActive={this.state.tabSelected === 'CodeFile'}>
+                  <TabLink onClick={this.selectTab('CodeFile')}>
+                    <span>Code File</span>
+                  </TabLink>
+                </Tab>
+              </TabList>
+            </Tabs>
+
+            {
+              this.state.tabSelected === 'CodeSnippet'
+              ? (
                 <Field>
-                  <Label>paste code snipper</Label>
                   <Control>
                     <TextArea
                       placeholder="Paste code snippet here"
                       type="email"
-                      value={this.state.formData.email}
+                      value={this.state.formData.codeSnippet}
                       onChange={this.changeFormDataValue("codeSnippet")}
                     />
                   </Control>
                 </Field>
-              </Column>
-
-              <Column isSize={'narrow'} style={{fontWeight: 'bold'}}>
-                <div style={{position: 'relative', top: '50%', width: '100%', textAlign: 'center'}}>or</div>
-              </Column>
-
-              <Column>
-                <Field style={{height: '100%'}}>
-                  <Label>upload a file</Label>
-                  <Control style={{position: 'relative', 'top': '25%', left: '25%'}}>
+              )
+              : (
+                <Field style={{ height: "100%" }}>
+                  <Control>
                     <div className="file">
                       <label className="file-label">
-                        <input className="file-input" type="file" name="resume" />
+                        <input
+                          className="file-input"
+                          type="file"
+                          onChange={this.onFileChange}
+                        />
                         <span className="file-cta">
                           <span className="file-icon">
-                            <i className="fas fa-upload"></i>
+                            <i className="fas fa-upload" />
                           </span>
-                          <span className="file-label">
-                            Choose a file…
-                          </span>
+                          <span className="file-label">Choose a file…</span>
                         </span>
                       </label>
                     </div>
                   </Control>
                 </Field>
-              </Column>
-            </Columns>
+              )
+            }
+
             <Field>
               <Control>
                 <Button type="submit">Submit</Button>
@@ -120,4 +173,10 @@ class CodeUpload extends Component {
   }
 }
 
-export default connect()(CodeUpload);
+let mapDispatchToProps = (dispatch) => {
+  return {
+    submitCode: (data) => dispatch(submitCode(data))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(CodeUpload);

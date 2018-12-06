@@ -15,7 +15,7 @@ let schema = new mongoose.Schema({
   auth_tokens: {
     select: false,
     type: [{
-      ip_address: String,
+      ip: String,
       user_agent: String,
       token: String
     }]
@@ -56,11 +56,16 @@ schema.method('generateToken', async function (data) {
 })
 
 schema.static('getByToken', async function ({ip, user_agent, token}) {
-  return await User.findOne({
-    'auth_token': {
-      $elemMatch: { ip, user_agent, token }
+  let query = {
+    'auth_tokens': {
+      $elemMatch: {
+        ip,
+        user_agent,
+        token
+      }
     }
-  })
+  }
+  return await User.findOne(query)
 })
 
 let User = mongoose.model('User', schema)

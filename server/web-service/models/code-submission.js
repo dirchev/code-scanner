@@ -8,7 +8,7 @@ let schema = new mongoose.Schema({
   },
   file_id: String,
   created: {type: Date, default: Date.now},
-  status: {type: String, enum: ['in queue', 'processing', 'processed', 'failed']},
+  status: {type: String, enum: ['new', 'in queue', 'processed', 'failed']},
   analysisResult: [
     {
       line: Number,

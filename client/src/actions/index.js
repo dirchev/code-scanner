@@ -56,6 +56,32 @@ export let logoutUser = () => async dispatch => {
   }
 }
 
+export let submitCode = data => async dispatch => {
+  try {
+    dispatch({
+      type: 'SUBMITCODE_START',
+    })
+    let response
+    if (data.codeFile) {
+      var formData = new FormData();
+      formData.append("codeFile", data.codeFile);
+      formData.append("title", data.title);
+      response = await axios.post('http://localhost:8080/submissions', formData)
+    } else {
+      response = await axios.post('http://localhost:8080/submissions', data)
+    }
+    dispatch({
+      type: 'SUBMITCODE_SUCCESS',
+      payload: response
+    })
+  } catch (err) {
+    dispatch({
+      type: 'SUBMITCODE_ERROR',
+      payload: err
+    })
+  }
+}
+
 export let getSubmissions = data => async dispatch => {
   try {
     dispatch({
