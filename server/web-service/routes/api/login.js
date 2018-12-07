@@ -13,7 +13,7 @@ module.exports = function ({models, apiHelpers}) {
       }, schema)
       let user = await models.User.findByCredentials(data)
       if (!user) {
-        let error = apiHelpers.createError([{base: 'email and password are not valid'}], 403)
+        let error = apiHelpers.createError([{path: 'base', message: 'email and password combination is not valid'}], 422)
         throw error
       }
       let token = await user.generateToken({

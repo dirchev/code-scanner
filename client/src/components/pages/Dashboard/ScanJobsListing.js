@@ -5,21 +5,15 @@ class ScanJobsListing extends Component {
   render() {
     return (
       <Fragment>
-        <div style={{ marginBottom: 10 }}>
-          <ScanJobsListingItem />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <ScanJobsListingItem />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <ScanJobsListingItem />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <ScanJobsListingItem />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <ScanJobsListingItem />
-        </div>
+        {
+          this.props.items.map((item) => {
+            return (
+              <div key={item._id} style={{ marginBottom: 10 }}>
+                <ScanJobsListingItem item={item} />
+              </div>
+            )
+          })
+        }
       </Fragment>
     );
   }

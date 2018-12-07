@@ -1,18 +1,21 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { Redirect } from 'react-router'
 import { loginUser } from '../../../actions';
 import { Container } from "bloomer";
 import { Field, Label, Control, Input, Button } from "bloomer";
+import { Notification } from "bloomer/lib/elements/Notification";
 
 class LoginForm extends Component {
   constructor () {
     super()
     this.state = {
+      loading: false,
       formData: {
         email: '',
         password: '',
       },
-      errors: {}
+      error: '',
+      redirect: false
     }
     this.changeFormDataValue = this.changeFormDataValue.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -34,12 +37,30 @@ class LoginForm extends Component {
 
   handleFormSubmit (e) {
     e.preventDefault()
-    this.props.loginUser(this.state.formData)
+    this.setState({loading: true})
+    loginUser(this.state.formData)
+      .then(() => {
+        this.setState({
+          loading: false,
+          redirect: true
+        })
+      })
+      .catch((err) => {
+        this.setState({
+          loading: false,
+          error: err
+        })
+      })
   }
 
   render() {
+    if (this.state.loading) return (<div>Loading...</div>)
+    if (this.state.redirect) return (<Redirect to='/dashboard' />)
     return (
       <Container style={{ marginTop: 20 }}>
+        {this.state.error ? (
+          <Notification isColor="danger">{this.state.error}</Notification>
+        ) : null}
         <form onSubmit={this.handleFormSubmit}>
           <Field>
             <Label>Email</Label>
@@ -76,11 +97,4 @@ class LoginForm extends Component {
   }
 }
 
-let mapDispatchToProps = dispatch => {
-  return {
-    loginUser: (data) => {
-      dispatch(loginUser(data))
-    }
-  }
-}
-export default connect(null, mapDispatchToProps)(LoginForm)
+export default LoginForm

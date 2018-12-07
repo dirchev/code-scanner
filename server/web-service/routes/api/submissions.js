@@ -11,8 +11,7 @@ module.exports = function ({models, apiHelpers}) {
         user_agent: req.headers['user-agent']
       })
       if (!user) throw apiHelpers.createError([{base: 'Not authorised'}], 403)
-      // let submissions = await models.CodeSubmissions.getAllForUser(user)
-      let submissions = []
+      let submissions = await models.CodeSubmission.getAllForUser(user)
       res.body = submissions
     }
   ]

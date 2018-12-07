@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { Redirect } from 'react-router'
 import { registerUser } from "../../../actions";
 import { Container } from "bloomer";
 import { Field, Label, Control, Input, Button } from "bloomer";
+import { Notification } from "bloomer/lib/elements/Notification";
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
   constructor() {
     super();
     this.state = {
+      loading: false,
       formData: {
         name: "",
         email: "",
         password: ""
       },
-      errors: {}
+      error: null
     };
     this.changeFormDataValue = this.changeFormDataValue.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -35,15 +37,32 @@ class LoginForm extends Component {
 
   handleFormSubmit(e) {
     e.preventDefault();
-    this.props.registerUser(this.state.formData);
+    registerUser(this.state.formData)
+      .then((response) => {
+        this.setState({
+          loading: false,
+          redirect: true
+        })
+      })
+      .catch((err) => {
+        this.setState({
+          error: err,
+          loading: false
+        })
+      })
   }
 
   render() {
+    if (this.state.loading) return (<div>Loading...</div>)
+    if (this.state.redirect) return (<Redirect to='/login' />)
     return (
       <Container style={{ marginTop: 20 }}>
+        {this.state.error ? (
+          <Notification isColor="danger">{this.state.error}</Notification>
+        ) : null}
         <form onSubmit={this.handleFormSubmit}>
           <Field>
-            <Label>Email</Label>
+            <Label>Name</Label>
             <Control>
               <Input
                 placeholder="Please enter your name."
@@ -89,14 +108,4 @@ class LoginForm extends Component {
   }
 }
 
-let mapDispatchToProps = dispatch => {
-  return {
-    registerUser: data => {
-      dispatch(registerUser(data));
-    }
-  };
-};
-export default connect(
-  null,
-  mapDispatchToProps
-)(LoginForm);
+export default RegisterForm

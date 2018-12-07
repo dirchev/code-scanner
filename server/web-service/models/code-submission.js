@@ -8,7 +8,7 @@ let schema = new mongoose.Schema({
   },
   file_id: String,
   created: {type: Date, default: Date.now},
-  status: {type: String, enum: ['new', 'in queue', 'processed', 'failed']},
+  status: {type: String, enum: ['new', 'in queue', 'processing', 'processed', 'failed']},
   analysisResult: [
     {
       line: Number,
@@ -20,8 +20,12 @@ let schema = new mongoose.Schema({
 })
 
 schema.static('getAllForUser', async function (user) {
-  return await this.find({user: user}).sort({created: -1})
+  return await this.find({user: user.id}).sort({created: -1})
 })
+schema.static('getOneForUser', async function (id, user) {
+  return await this.findOne({_id: id, user: user.id})
+})
+
 
 let CodeSubmission = mongoose.model('CodeSubmission', schema)
 

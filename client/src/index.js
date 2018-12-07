@@ -9,9 +9,10 @@ import store from './store'
 import axios from 'axios'
 
 let token = window.localStorage.getItem('CodeScannerToken')
+let user = window.localStorage.getItem('CodeScannerUser')
 if (token) {
+  window.user = JSON.parse(user)
   axios.defaults.headers.common['CodeScannerToken'] = token
-  console.log('setting token')
 }
 
 const rootElement = document.getElementById("root")

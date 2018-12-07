@@ -11,8 +11,12 @@ module.exports = function ({models, apiHelpers}) {
         user_agent: req.headers['user-agent']
       })
       let submissionId = req.params.submissionId
-      let submission = await models.CodeSubmissions.getOneForUser(user, submissionId)
-      res.body = submission
+      let submission = await models.CodeSubmission.getOneForUser(submissionId, user)
+      let file = await apiHelpers.fileService.readFile(submission.file_id)
+      res.body = {
+        submission: submission,
+        file: file
+      }
     }
   ]
 }

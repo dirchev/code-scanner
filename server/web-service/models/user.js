@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const uuid = require('uuid')
+var uniqueValidator = require('mongoose-unique-validator');
+
 
 let schema = new mongoose.Schema({
   name: String,
@@ -21,6 +23,7 @@ let schema = new mongoose.Schema({
     }]
   }
 })
+schema.plugin(uniqueValidator, { message: '{PATH} has already been taken' })
 
 schema.pre('save', async function () {
   var self = this
@@ -30,16 +33,10 @@ schema.pre('save', async function () {
   return
 })
 
-schema.pre('validate', async function () {
-  if (this.isNew) return
-  let user = User.findOne({_id: {$ne: this.id}, email: this.email})
-  if (user) this.invalidate('email', 'email already registered')
-  return
-})
-
 schema.static('findByCredentials', async function (credentials) {
-  if (!credentials.email || credentials.email.trim() === '') return next()
+  if (!credentials.email || credentials.email.trim() === '') return null
   let user = await this.findOne({email: credentials.email.trim().toLowerCase()}).select('+password')
+  if (!user) return null
   let passwordMatches = await bcrypt.compare(credentials.password, user.password)
   if (!passwordMatches) return null
   return await this.findOne({email: credentials.email.trim().toLowerCase()})
@@ -53,6 +50,14 @@ schema.method('generateToken', async function (data) {
   }
   await User.updateOne({_id: this.id}, {$push: {auth_tokens: cookieData}})
   return cookieData.token
+})
+
+schema.static('invalidateToken', async function (token) {
+  return await this.updateMany({
+    $pull: {
+      auth_tokens: {token: token}
+    }
+  })
 })
 
 schema.static('getByToken', async function ({ip, user_agent, token}) {

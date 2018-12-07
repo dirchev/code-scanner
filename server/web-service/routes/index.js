@@ -2,8 +2,10 @@ const errorsResponder = require('./errorResponder')
 const defaultResponder = require('./defaultResponder')
 const loadRouteConstructor = require('./loadRouteConstructor')
 const FileService = require('../lib/file-service')
+const CodeAnalysis = require('../lib/code-analysis')
 
 let routes = function ({app, models = {}}) {
+  let fileService = new FileService({url: 'http://localhost:8081'})
   let apiHelpers = {
     createError: function (errors, code) {
       let error = new Error('CustomError')
@@ -12,7 +14,8 @@ let routes = function ({app, models = {}}) {
       error.errors = errors
       return error
     },
-    fileService: new FileService({url: 'http://localhost:8081'})
+    fileService: fileService,
+    CodeAnalysis: new CodeAnalysis(models.CodeSubmission, fileService)
   }
 
   let loadRoute = loadRouteConstructor(app, {models, apiHelpers})
@@ -21,6 +24,7 @@ let routes = function ({app, models = {}}) {
   loadRoute('get', '/submissions', require('./api/submissions'))
   loadRoute('get', '/submissions/:submissionId', require('./api/submission'))
   loadRoute('post', '/submissions', require('./api/create-submission'))
+  loadRoute('post', '/logout', require('./api/logout'))
 
 
   app.use(defaultResponder)

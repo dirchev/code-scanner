@@ -18,19 +18,18 @@ class FileService {
     let formData = {
       code_file: fileStream
     }
-    console.log('making request to file service');
-
     let {statusCode, body} = await makeRequest('post', this.url + '/write', formData)
     if (statusCode !== 200) {
       let error = JSON.parse(body)
       error.code = statusCode
       throw error
     }
-    return body
+    return JSON.parse(body)
   }
 
-  async readFile () {
-
+  async readFile (fileId) {
+    let {statusCode, body} = await makeRequest('get', this.url + '/read/' + fileId, {})
+    return body
   }
 }
 
