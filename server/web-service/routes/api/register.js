@@ -7,7 +7,7 @@ module.exports = function ({models, apiHelpers}) {
     name: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string()
-    //  .regex(passwordREGEX, {name: 'two capital, two lowercase, two digits and one special sign'})
+     .regex(passwordREGEX, {name: 'two capital, two lowercase, two digits and one special sign'})
      .required()
      .error(() => 'password must contain at least two capital and two lowercase letters, two digits and one special sign and have a length of at least 8 characters')
   })
