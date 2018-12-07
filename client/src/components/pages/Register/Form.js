@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router'
 import { registerUser } from "../../../actions";
-import { Container } from "bloomer";
 import { Field, Label, Control, Input, Button } from "bloomer";
 import { Notification } from "bloomer/lib/elements/Notification";
 
@@ -46,8 +45,8 @@ class RegisterForm extends Component {
       })
       .catch((err) => {
         this.setState({
-          error: err,
-          loading: false
+          loading: false,
+          error: err.message.toString()
         })
       })
   }

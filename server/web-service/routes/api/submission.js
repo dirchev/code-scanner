@@ -11,7 +11,11 @@ module.exports = function ({models, apiHelpers}) {
         user_agent: req.headers['user-agent']
       })
       let submissionId = req.params.submissionId
-      let submission = await models.CodeSubmission.getOneForUser(submissionId, user)
+      try {
+        var submission = await models.CodeSubmission.getOneForUser(submissionId, user)
+      } catch (err) {
+        throw apiHelpers.createError([{path: 'base', message: err.message}], 422)
+      }
       if (!submission) throw apiHelpers.createError([{path: 'base', message: 'Not authorised'}], 403)
       let file = await apiHelpers.fileService.readFile(submission.file_id)
       res.body = {

@@ -30,12 +30,12 @@ class Dashboard extends Component {
           items: response
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          error: err
-        });
-      });
+          error: err.message.toString()
+        })
+      })
   }
 
   componentWillMount() {

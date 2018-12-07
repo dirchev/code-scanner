@@ -23,6 +23,7 @@ schema.static('getAllForUser', async function (user) {
   return await this.find({user: user.id}).sort({created: -1})
 })
 schema.static('getOneForUser', async function (id, user) {
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new Error('Submission ID is not valid')
   return await this.findOne({_id: id, user: user.id})
 })
 

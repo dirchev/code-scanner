@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router'
 import { loginUser } from '../../../actions';
-import { Container } from "bloomer";
 import { Field, Label, Control, Input, Button } from "bloomer";
 import { Notification } from "bloomer/lib/elements/Notification";
 
@@ -49,7 +48,7 @@ class LoginForm extends Component {
       .catch((err) => {
         this.setState({
           loading: false,
-          error: err
+          error: err.message.toString()
         })
       })
   }

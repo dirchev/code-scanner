@@ -1,12 +1,4 @@
 import React, { Component, Fragment } from "react";
-import {
-  Card,
-  CardContent,
-  Media,
-  MediaContent,
-  Title,
-  Content
-} from "bloomer";
 import moment from "moment";
 
 import { Link } from "react-router-dom";
@@ -15,6 +7,9 @@ import { CardFooter } from "bloomer/lib/components/Card/Footer/CardFooter";
 import { CardFooterItem } from "bloomer/lib/components/Card/Footer/CardFooterItem";
 import { CardHeaderTitle } from "bloomer/lib/components/Card/Header/CardHeaderTitle";
 import { CardHeader } from "bloomer/lib/components/Card/Header/CardHeader";
+import { Card } from "bloomer/lib/components/Card/Card";
+import { CardContent } from "bloomer/lib/components/Card/CardContent";
+import { Content } from "bloomer/lib/elements/Content";
 
 class ScanJobsListingItem extends Component {
   getStatusColor() {

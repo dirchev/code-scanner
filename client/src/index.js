@@ -7,6 +7,7 @@ import * as serviceWorker from './serviceWorker'
 import axios from 'axios'
 import 'toastr/build/toastr.css'
 
+// load logged in user
 let token = window.localStorage.getItem('CodeScannerToken')
 let user = window.localStorage.getItem('CodeScannerUser')
 if (token) {
