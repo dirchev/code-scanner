@@ -7,9 +7,9 @@ const rateLimit = require("express-rate-limit")
 const loadRoutes = require('./routes/index.js')
 const loadModels = require('./models/index.js')
 
-
 const execute = async () => {
   const app = express()
+  app.enable("trust proxy")
   app.use(cookieParser())
   app.use(helmet())
   app.use(bodyParser.json())
