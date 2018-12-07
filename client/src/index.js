@@ -4,8 +4,6 @@ import App from './App';
 import 'bulma/css/bulma.css';
 import * as serviceWorker from './serviceWorker'
 
-import { Provider } from 'react-redux'
-import store from './store'
 import axios from 'axios'
 import 'toastr/build/toastr.css'
 
@@ -18,9 +16,7 @@ if (token) {
 
 const rootElement = document.getElementById("root")
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <App />,
   rootElement
 );
 
