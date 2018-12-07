@@ -1,12 +1,17 @@
 import axios from 'axios'
 import toastr from 'toastr'
 import Joi from 'joi'
+
 let ENDPOINT = 'http://localhost:8080/api'
 if (process.env.NODE_ENV === 'production') {
   ENDPOINT = window.location.origin + '/api'
 }
 
 let processErrors = function (err) {
+  if (err.message === 'Network Error') {
+    toastr.error('Could not connect to server')
+    throw new Error('Could not connect to server')
+  }
   if (err.isJoi) {
     let errorMessage = err.details.map((i) => i.message)
     throw new Error(errorMessage)

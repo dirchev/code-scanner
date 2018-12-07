@@ -4,8 +4,9 @@ const CodeAnalysis = require('../lib/code-analysis')
 const express = require('express')
 const path = require('path')
 
-let routes = function ({app, models = {}}) {
+let routes = async function ({app, models = {}}) {
   let fileService = new FileService({url: 'http://localhost:8081'})
+  let codeAnalysis = new CodeAnalysis(models.CodeSubmission, fileService)
   let apiHelpers = {
     createError: function (errors, code) {
       let error = new Error('CustomError')
@@ -15,8 +16,14 @@ let routes = function ({app, models = {}}) {
       return error
     },
     fileService: fileService,
-    CodeAnalysis: new CodeAnalysis(models.CodeSubmission, fileService)
+    CodeAnalysis: codeAnalysis
   }
+
+  // get all not processed files to analysis queue
+  let codeSubmissions = await models.CodeSubmission.find({status: {$in: ['new', 'in queue', 'processing']}}).select('_id')
+  codeSubmissions.forEach(function ({_id}) {
+    codeAnalysis.addToQueue(_id)
+  })
 
   // API endpoints
   let loadRoute = loadRouteConstructor(app, {models, apiHelpers})

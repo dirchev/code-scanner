@@ -20,7 +20,7 @@ const execute = async () => {
   }))
 
   let models = loadModels()
-  loadRoutes({app, models})
+  await loadRoutes({app, models})
 
   const port = 8080
   app.listen(port, () => console.log(`Web Service listening on port ${port}!`))
