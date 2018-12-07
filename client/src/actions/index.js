@@ -1,5 +1,6 @@
 import axios from 'axios'
 import toastr from 'toastr'
+const ENDPOINT = window.location.origin + '/api'
 
 let processErrors = function (err) {
   if (err.response.status === 422) {
@@ -17,7 +18,7 @@ let processErrors = function (err) {
 
 export let loginUser = async loginData => {
   try {
-    let response = await axios.post('http://localhost:8080/login', loginData)
+    let response = await axios.post(`${ENDPOINT}/login`, loginData)
     window.localStorage.setItem('CodeScannerToken', response.data.token)
     window.localStorage.setItem('CodeScannerUser', JSON.stringify(response.data))
     axios.defaults.headers.common['CodeScannerToken'] = response.data.token;
@@ -30,7 +31,7 @@ export let loginUser = async loginData => {
 
 export let registerUser = async registerData => {
   try {
-    let response = await axios.post('http://localhost:8080/register', registerData)
+    let response = await axios.post(`${ENDPOINT}/register`, registerData)
     return response.data
   } catch (err) {
     processErrors(err)
@@ -38,7 +39,7 @@ export let registerUser = async registerData => {
 }
 
 export let logoutUser = async () => {
-  let response = await axios.post('http://localhost:8080/logout')
+  let response = await axios.post(`${ENDPOINT}/logout`)
   window.localStorage.clear()
   return response.data
 }
@@ -50,9 +51,9 @@ export let submitCode = async data => {
       var formData = new FormData();
       formData.append("codeFile", data.codeFile);
       formData.append("title", data.title);
-      response = await axios.post('http://localhost:8080/submissions', formData)
+      response = await axios.post(`${ENDPOINT}/submissions`, formData)
     } else {
-      response = await axios.post('http://localhost:8080/submissions', data)
+      response = await axios.post(`${ENDPOINT}/submissions`, data)
     }
     return response.data
   } catch (err) {
@@ -62,7 +63,7 @@ export let submitCode = async data => {
 
 export let getSubmissions = async () => {
   try {
-    let response = await axios.get('http://localhost:8080/submissions', {})
+    let response = await axios.get(`${ENDPOINT}/submissions`, {})
     return response.data
   } catch (err) {
     processErrors(err)
@@ -71,7 +72,7 @@ export let getSubmissions = async () => {
 
 export let getSubmission = async (id) => {
   try {
-    let response = await axios.get('http://localhost:8080/submissions/' + id, {})
+    let response = await axios.get(`${ENDPOINT}/submissions/${id}`, {})
     return response.data
   } catch (err) {
     processErrors(err)

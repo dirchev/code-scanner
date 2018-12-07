@@ -7,6 +7,12 @@ module.exports = function (app, context) {
       routes = [routes]
     }
 
+    routes = [
+      ...routes,
+      require('./defaultResponder'),
+      require('./errorResponder')
+    ]
+
     routes = routes.map(function (route) {
       if (route instanceof AsyncFunction) {
         return (req, res, next) => {

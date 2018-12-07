@@ -1,8 +1,8 @@
-const errorsResponder = require('./errorResponder')
-const defaultResponder = require('./defaultResponder')
 const loadRouteConstructor = require('./loadRouteConstructor')
 const FileService = require('../lib/file-service')
 const CodeAnalysis = require('../lib/code-analysis')
+const express = require('express')
+const path = require('path')
 
 let routes = function ({app, models = {}}) {
   let fileService = new FileService({url: 'http://localhost:8081'})
@@ -18,17 +18,21 @@ let routes = function ({app, models = {}}) {
     CodeAnalysis: new CodeAnalysis(models.CodeSubmission, fileService)
   }
 
+  // API endpoints
   let loadRoute = loadRouteConstructor(app, {models, apiHelpers})
-  loadRoute('post', '/login', require('./api/login'))
-  loadRoute('post', '/register', require('./api/register'))
-  loadRoute('get', '/submissions', require('./api/submissions'))
-  loadRoute('get', '/submissions/:submissionId', require('./api/submission'))
-  loadRoute('post', '/submissions', require('./api/create-submission'))
-  loadRoute('post', '/logout', require('./api/logout'))
+  loadRoute('post', '/api/login', require('./api/login'))
+  loadRoute('post', '/api/register', require('./api/register'))
+  loadRoute('get', '/api/submissions', require('./api/submissions'))
+  loadRoute('get', '/api/submissions/:submissionId', require('./api/submission'))
+  loadRoute('post', '/api/submissions', require('./api/create-submission'))
+  loadRoute('post', '/api/logout', require('./api/logout'))
 
-
-  app.use(defaultResponder)
-  app.use(errorsResponder)
+  // server react app
+  const CLIENT_BUILD_PATH = path.join(__dirname, '../../../client/build')
+  app.use(express.static(CLIENT_BUILD_PATH))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+  })
 }
 
 module.exports = routes
