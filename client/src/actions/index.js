@@ -23,6 +23,9 @@ let processErrors = function (err) {
   } else if (err.response.status === 429) {
     toastr.error('You have made too many requests. Please wait...', 'Too many requests')
     throw new Error('Too many requests')
+  } else if (err.response.status === 413) {
+    toastr.error('Request entity too large.')
+    throw new Error('The selected file exceeds the size limit.')
   } else {
     toastr.error('Please try again later', 'Unexpected Error')
     throw new Error('Unexpected Error')
