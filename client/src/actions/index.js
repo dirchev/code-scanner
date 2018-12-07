@@ -1,4 +1,19 @@
 import axios from 'axios'
+import toastr from 'toastr'
+
+let processErrors = function (err) {
+  if (err.response.status === 422) {
+    throw err.response.data.errors.map((i) => i.message).join(' ')
+  } else if (err.response.status === 403) {
+    throw 'Not authorised'
+  } else if (err.response.status === 429) {
+    toastr.error('You have made too many requests. Please wait...', 'Too many requests')
+    throw 'Too many requests'
+  } else {
+    toastr.error('Please try again later', 'Unexpected Error')
+    throw 'Unexpected Error'
+  }
+}
 
 export let loginUser = async loginData => {
   try {
@@ -9,7 +24,7 @@ export let loginUser = async loginData => {
     window.user = response.data
     return response.data
   } catch (err) {
-    throw err.response.data.errors.map((i) => i.message).join(' ')
+    processErrors(err)
   }
 }
 
@@ -18,7 +33,7 @@ export let registerUser = async registerData => {
     let response = await axios.post('http://localhost:8080/register', registerData)
     return response.data
   } catch (err) {
-    throw err.response.data.errors.map((i) => i.message).join(' ')
+    processErrors(err)
   }
 }
 
@@ -41,7 +56,7 @@ export let submitCode = async data => {
     }
     return response.data
   } catch (err) {
-    throw err.response.data.errors.map((i) => i.message).join(' ')
+    processErrors(err)
   }
 }
 
@@ -50,7 +65,7 @@ export let getSubmissions = async () => {
     let response = await axios.get('http://localhost:8080/submissions', {})
     return response.data
   } catch (err) {
-    throw err.response.data.errors.map((i) => i.message).join(' ')
+    processErrors(err)
   }
 }
 
@@ -59,6 +74,6 @@ export let getSubmission = async (id) => {
     let response = await axios.get('http://localhost:8080/submissions/' + id, {})
     return response.data
   } catch (err) {
-    throw err.response.data.errors.map((i) => i.message).join(' ')
+    processErrors(err)
   }
 }

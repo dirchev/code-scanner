@@ -42,7 +42,8 @@ class LoginForm extends Component {
       .then(() => {
         this.setState({
           loading: false,
-          redirect: true
+          redirect: true,
+          error: null
         })
       })
       .catch((err) => {
@@ -54,10 +55,10 @@ class LoginForm extends Component {
   }
 
   render() {
-    if (this.state.loading) return (<div>Loading...</div>)
+    if (this.state.loading) return <Notification isColor="primary">Loading...</Notification>;
     if (this.state.redirect) return (<Redirect to='/dashboard' />)
     return (
-      <Container style={{ marginTop: 20 }}>
+      <div>
         {this.state.error ? (
           <Notification isColor="danger">{this.state.error}</Notification>
         ) : null}
@@ -92,7 +93,7 @@ class LoginForm extends Component {
             </Control>
           </Field>
         </form>
-      </Container>
+      </div>
     );
   }
 }

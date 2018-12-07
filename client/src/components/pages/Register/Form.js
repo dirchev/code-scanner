@@ -53,10 +53,10 @@ class RegisterForm extends Component {
   }
 
   render() {
-    if (this.state.loading) return (<div>Loading...</div>)
+    if (this.state.loading) return <Notification isColor="primary">Loading...</Notification>;
     if (this.state.redirect) return (<Redirect to='/login' />)
     return (
-      <Container style={{ marginTop: 20 }}>
+      <div>
         {this.state.error ? (
           <Notification isColor="danger">{this.state.error}</Notification>
         ) : null}
@@ -103,7 +103,7 @@ class RegisterForm extends Component {
             </Control>
           </Field>
         </form>
-      </Container>
+      </div>
     );
   }
 }

@@ -2,6 +2,10 @@ import React, { Component, Fragment } from 'react';
 import NavigationHome from "../../ui/NavigationHome";
 import { Container } from "bloomer";
 import Form from './Form'
+import { Card } from 'bloomer/lib/components/Card/Card';
+import { CardHeader } from 'bloomer/lib/components/Card/Header/CardHeader';
+import { CardHeaderTitle } from 'bloomer/lib/components/Card/Header/CardHeaderTitle';
+import { CardContent } from 'bloomer/lib/components/Card/CardContent';
 
 class Register extends Component {
   render() {
@@ -9,8 +13,16 @@ class Register extends Component {
       <Fragment>
         <NavigationHome />
         <Container style={{marginTop: 20}}>
-          <h1>Register</h1>
-          <Form />
+          <Card>
+            <CardHeader>
+              <CardHeaderTitle>
+                Register
+              </CardHeaderTitle>
+            </CardHeader>
+            <CardContent>
+              <Form />
+            </CardContent>
+          </Card>
         </Container>
       </Fragment>
     )

@@ -7,6 +7,7 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import store from './store'
 import axios from 'axios'
+import 'toastr/build/toastr.css'
 
 let token = window.localStorage.getItem('CodeScannerToken')
 let user = window.localStorage.getItem('CodeScannerUser')
