@@ -13,7 +13,9 @@ const execute = async () => {
   app.use(cookieParser())
   app.use(helmet())
   app.use(bodyParser.json())
-  app.use(cors({origin: 'http://localhost:3000'}))
+  if (process.env.ALLOW_CORS) {
+    app.use(cors({origin: 'http://localhost:3000'}))
+  }
   app.use(rateLimit({
     windowMs: 15 * 1000, // 15 seconds
     max: 20 // limit each IP to 100 requests per windowMs
