@@ -24,7 +24,7 @@ class ScanJobsListingItem extends Component {
       <Fragment>
         <Card>
           <CardHeader>
-            <CardHeaderTitle>{this.props.item.title}s </CardHeaderTitle>
+            <CardHeaderTitle>{this.props.item.title}</CardHeaderTitle>
           </CardHeader>
           <CardContent>
             <Content>
